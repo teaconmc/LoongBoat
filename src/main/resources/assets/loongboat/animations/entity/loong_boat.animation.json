@@ -1,7 +1,7 @@
 {
 	"format_version": "1.8.0",
 	"animations": {
-		"animation.DragonBoat.move.01.new": {
+		"animation.loong_boat.move.01.new": {
 			"loop": true,
 			"animation_length": 0.76,
 			"bones": {
@@ -67,7 +67,7 @@
 				}
 			}
 		},
-		"animation.DragonBoat.move.02.new": {
+		"animation.loong_boat.move.02.new": {
 			"loop": true,
 			"animation_length": 0.76,
 			"bones": {
@@ -174,7 +174,7 @@
 				}
 			}
 		},
-		"animation.DragonBoat.move.03.new": {
+		"animation.loong_boat.move.03.new": {
 			"loop": true,
 			"animation_length": 0.76,
 			"bones": {
@@ -370,7 +370,7 @@
 				}
 			}
 		},
-		"animation.DragonBoat.move.04.new": {
+		"animation.loong_boat.move.04.new": {
 			"loop": true,
 			"animation_length": 0.76,
 			"bones": {
@@ -563,7 +563,7 @@
 				}
 			}
 		},
-		"animation.DragonBoat.fly.01.new": {
+		"animation.loong_boat.fly.01.new": {
 			"loop": true,
 			"animation_length": 3.2,
 			"bones": {
@@ -770,7 +770,7 @@
 				}
 			}
 		},
-		"animation.DragonBoat.fan.01.new": {
+		"animation.loong_boat.fan.01.new": {
 			"loop": true,
 			"animation_length": 2.56,
 			"bones": {
