@@ -20,6 +20,7 @@ jobs:
         id: short-sha
       - name: Build
         run: |
+          chmod +x ./gradlew
           ./gradlew build
           VERSION_IDENTIFIER=SNAPSHOT+${{ steps.short-sha.outputs.sha }}
           FILE_NAME="$(ls ./build/libs -1 | head -n 1)"
