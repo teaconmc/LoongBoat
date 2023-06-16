@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "boat",
+  "key": {
+    "#": {
+      "tag": "minecraft:boats"
+    },
+    "X": {
+      "item": "minecraft:dragon_head"
+    }
+  },
+  "pattern": [
+    "  X",
+    "# #",
+    " # "
+  ],
+  "result": {
+    "item": "loongboat:loong_boat"
+  },
+  "show_notification": true
+}
