@@ -4,15 +4,22 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.vehicle.Boat;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.teacon.loongboat.LoongBoat;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
-import software.bernie.geckolib.core.animation.*;
+import software.bernie.geckolib.core.animation.AnimatableManager;
+import software.bernie.geckolib.core.animation.AnimationController;
+import software.bernie.geckolib.core.animation.AnimationState;
+import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
 
 public class LoongBoatEntity extends Boat implements GeoEntity {
@@ -27,6 +34,7 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
             SynchedEntityData.defineId(LoongBoatEntity.class, EntityDataSerializers.BYTE);
     private static final byte DEFAULT_SIZE = 0;
     private static final String SIZE_DATA_KEY = "Size";
+    private static final RawAnimation MOVE_ANIMATION = RawAnimation.begin().thenLoop("animation.loong_boat.move");
 
     private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
@@ -40,6 +48,40 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
         this.xo = x;
         this.yo = y;
         this.zo = z;
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    public Item getDropItem() {return LoongBoat.LOONG_BOAT_ITEM.get();}
+
+    @Override
+    protected int getMaxPassengers() {
+        return (this.getSize() + 1) * 2;
+    }
+
+    /**
+     * @see Boat#positionRider(Entity, MoveFunction)
+     */
+    @Override
+    protected void positionRider(Entity rider, Entity.MoveFunction moveFunc) {
+        super.positionRider(rider, moveFunc);
+
+        var idx = this.getPassengers().indexOf(rider); // save time by only making one query
+        if (idx == -1) return; // equivalent to if (!this.hasPassenger(eider)) return;
+
+        float xOffset = (this.getSize() - idx) * 0.735F + 0.4F;
+        if (rider instanceof Animal) xOffset += 0.2F;
+        var posPlanar = new Vec3(xOffset, 0, 0)
+                .yRot((-this.getYRot() - 90) * ((float) Math.PI / 180))
+                .add(this.position());
+        moveFunc.accept(rider, posPlanar.x, rider.getY(), posPlanar.z);
+
+        // make animals always facing sidewards
+        if (rider instanceof Animal && this.getPassengers().size() != this.getMaxPassengers()) {
+            int facing = rider.getId() % 2 == 0 ? 90 : 270;
+            rider.setYBodyRot(((Animal) rider).yBodyRot + facing);
+            rider.setYHeadRot(rider.getYHeadRot() + facing);
+        }
     }
 
     @Override
@@ -79,9 +121,9 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
+        // FIXME: jitter animation
         if (this.getPaddleState(0) || this.getPaddleState(1)) {
-            tAnimationState.getController().setAnimation(RawAnimation.begin().then("animation.loong_boat.move", Animation.LoopType.LOOP));
-            return PlayState.CONTINUE;
+            return tAnimationState.setAndContinue(MOVE_ANIMATION);
         }
 
         return PlayState.STOP;
