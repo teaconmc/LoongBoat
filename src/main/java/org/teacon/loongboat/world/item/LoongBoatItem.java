@@ -125,9 +125,7 @@ public class LoongBoatItem extends Item implements GeoItem {
                     && event.getTarget() instanceof LoongBoatEntity boat
                     && boat.getSize() < 2) {
                 var isClient = event.getLevel().isClientSide();
-                if (!isClient) {
-                    boat.setSize((byte)(boat.getSize() + 1));
-                }
+                boat.setSize((byte)(boat.getSize() + 1));
                 event.setCanceled(true);
                 event.setCancellationResult(InteractionResult.sidedSuccess(isClient));
             }

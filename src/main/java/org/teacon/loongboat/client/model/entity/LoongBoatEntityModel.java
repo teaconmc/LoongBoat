@@ -55,8 +55,10 @@ public class LoongBoatEntityModel extends GeoModel<LoongBoatEntity> {
                 partDefinition.addOrReplaceChild(
                         WATER_PATCH_NAME + "_" + size,
                         CubeListBuilder.create().texOffs(0, 0)
-                                .addBox(-14 - 11 * size, -9, -3, 28 + 22 * size, 16, 3),
-                        PartPose.offsetAndRotation(0, -3, 1, ((float) Math.PI / 2), 0, 0));
+                                .addBox(-11 * (size + 1), -9, -3,
+                                        22 * (size + 1), 16, 3),
+                        PartPose.offsetAndRotation(0, -3, 1,
+                                ((float) Math.PI / 2), 0, 0));
             }
             return LayerDefinition.create(meshDefinition, TEXTURE_WIDTH, TEXTURE_HEIGHT);
         }

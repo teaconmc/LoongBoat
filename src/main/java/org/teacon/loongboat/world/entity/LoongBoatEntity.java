@@ -15,12 +15,14 @@ import org.teacon.loongboat.LoongBoat;
 import software.bernie.geckolib.animatable.GeoEntity;
 import software.bernie.geckolib.core.animatable.GeoAnimatable;
 import software.bernie.geckolib.core.animatable.instance.AnimatableInstanceCache;
-import software.bernie.geckolib.core.animatable.instance.SingletonAnimatableInstanceCache;
 import software.bernie.geckolib.core.animation.AnimatableManager;
 import software.bernie.geckolib.core.animation.AnimationController;
 import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.core.animation.RawAnimation;
 import software.bernie.geckolib.core.object.PlayState;
+import software.bernie.geckolib.util.GeckoLibUtil;
+
+import java.util.Optional;
 
 public class LoongBoatEntity extends Boat implements GeoEntity {
     public static final String ENTITY_NAME = "loong_boat";
@@ -35,8 +37,9 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
     private static final byte DEFAULT_SIZE = 0;
     private static final String SIZE_DATA_KEY = "Size";
     private static final RawAnimation MOVE_ANIMATION = RawAnimation.begin().thenLoop("animation.loong_boat.move");
+    private static final String ANIMATION_CONTROLLER_NAME = "controller";
 
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
     public LoongBoatEntity(EntityType<? extends Boat> entityType, Level level) {
         super(entityType, level);
@@ -62,6 +65,7 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
     /**
      * @see Boat#positionRider(Entity, MoveFunction)
      */
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void positionRider(Entity rider, Entity.MoveFunction moveFunc) {
         super.positionRider(rider, moveFunc);
@@ -101,6 +105,11 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
             size = DEFAULT_SIZE;
         }
         this.entityData.set(DATA_ID_SIZE, size);
+        Optional.ofNullable(this.getAnimatableInstanceCache()
+                        .getManagerForId(this.getId())
+                        .getAnimationControllers()
+                        .get(ANIMATION_CONTROLLER_NAME))
+                .ifPresent(AnimationController::forceAnimationReset);
     }
 
     @Override
@@ -117,7 +126,7 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
 
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllerRegistrar) {
-        controllerRegistrar.add(new AnimationController<>(this, "controller", 0, this::predicate));
+        controllerRegistrar.add(new AnimationController<>(this, ANIMATION_CONTROLLER_NAME, 0, this::predicate));
     }
 
     private <T extends GeoAnimatable> PlayState predicate(AnimationState<T> tAnimationState) {
@@ -130,5 +139,5 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
     }
 
     @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {return cache;}
+    public AnimatableInstanceCache getAnimatableInstanceCache() {return this.cache;}
 }
