@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.extensions.common.IClientItemExtensions;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -116,7 +115,7 @@ public class LoongBoatItem extends Item implements GeoItem {
         return this.cache;
     }
 
-    @Mod.EventBusSubscriber(modid = LoongBoat.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+    @Mod.EventBusSubscriber(modid = LoongBoat.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
     public static class EventHandler {
         @SubscribeEvent
         public static void onPlayerInteract(PlayerInteractEvent.EntityInteractSpecific event) {

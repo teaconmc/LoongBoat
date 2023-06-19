@@ -924,7 +924,7 @@
 					]
 				},
 				{
-					"name": "jiao",
+					"name": "horn",
 					"parent": "head",
 					"pivot": [2, 22.3959, -27.09709],
 					"cubes": [
@@ -987,7 +987,7 @@
 					]
 				},
 				{
-					"name": "jiao2",
+					"name": "horn2",
 					"parent": "head",
 					"pivot": [-2, 22.3959, -27.09709],
 					"cubes": [

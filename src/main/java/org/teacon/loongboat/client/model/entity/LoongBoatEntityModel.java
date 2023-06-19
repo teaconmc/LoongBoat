@@ -14,6 +14,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.vehicle.Boat;
 import org.teacon.loongboat.LoongBoat;
 import org.teacon.loongboat.world.entity.LoongBoatEntity;
+import software.bernie.geckolib.core.animatable.model.CoreGeoBone;
+import software.bernie.geckolib.core.animation.AnimationState;
 import software.bernie.geckolib.model.GeoModel;
 
 public class LoongBoatEntityModel extends GeoModel<LoongBoatEntity> {
@@ -33,6 +35,33 @@ public class LoongBoatEntityModel extends GeoModel<LoongBoatEntity> {
         return new ResourceLocation(LoongBoat.MODID, "animations/entity/" + LoongBoatEntity.ENTITY_NAME + "_" + loongBoatEntity.getSize() + ".animation.json");
     }
 
+    /**
+     * Transform the boat's head when the player in first-person mode to avoid blocking view
+     */
+    @Override
+    public void setCustomAnimations(LoongBoatEntity loongBoat, long instanceId, AnimationState<LoongBoatEntity> animationState) {
+        if (loongBoat.isControllerFirstPerson()) {
+            var head = getAnimationProcessor().getBone("dragon_head");
+            head.setPosY(-7.5F);
+            resizeBone(head, 0.8F);
+            var horn = getAnimationProcessor().getBone("horn");
+            var horn2 = getAnimationProcessor().getBone("horn2");
+            horn.setRotX(0.3F);
+            resizeBone(horn, 0.8F);
+            horn2.setRotX(0.3F);
+            resizeBone(horn2, 0.8F);
+        }
+    }
+
+    private static void resizeBone(CoreGeoBone bone, float scale) {
+        bone.setScaleX(scale);
+        bone.setScaleY(scale);
+        bone.setScaleZ(scale);
+    }
+
+    /**
+     * Render a water patch to prevent rendering of water in boat
+     */
     public static class VanillaModel extends EntityModel<Boat> {
 
         private static final String WATER_PATCH_NAME = "water_patch";
@@ -69,7 +98,7 @@ public class LoongBoatEntityModel extends GeoModel<LoongBoatEntity> {
 
         @SuppressWarnings("NullableProblems")
         @Override
-        public void setupAnim(Boat p_102618_, float p_102619_, float p_102620_, float p_102621_, float p_102622_, float p_102623_) {}
+        public void setupAnim(Boat boat, float f1, float f2, float f3, float f4, float f5) {}
 
         @SuppressWarnings("NullableProblems")
         @Override

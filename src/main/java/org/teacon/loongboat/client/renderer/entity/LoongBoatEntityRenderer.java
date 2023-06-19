@@ -8,8 +8,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
-import org.teacon.loongboat.LoongBoat;
 import org.teacon.loongboat.client.model.entity.LoongBoatEntityModel;
 import org.teacon.loongboat.world.entity.LoongBoatEntity;
 import software.bernie.geckolib.renderer.GeoEntityRenderer;
@@ -22,12 +20,6 @@ public class LoongBoatEntityRenderer extends GeoEntityRenderer<LoongBoatEntity> 
         ModelLayerLocation modelLayerLocation = LoongBoatEntityModel.VanillaModel.getModelLayerLocation();
         var modelPart = context.bakeLayer(modelLayerLocation);
         this.vanillaModel = new LoongBoatEntityModel.VanillaModel(modelPart);
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public ResourceLocation getTextureLocation(LoongBoatEntity animatable) {
-        return new ResourceLocation(LoongBoat.MODID, "textures/entity/" + LoongBoatEntity.ENTITY_NAME + ".png");
     }
 
     @SuppressWarnings("NullableProblems")
