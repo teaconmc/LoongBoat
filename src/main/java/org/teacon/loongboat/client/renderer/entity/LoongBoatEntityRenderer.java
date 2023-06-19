@@ -31,7 +31,7 @@ public class LoongBoatEntityRenderer extends GeoEntityRenderer<LoongBoatEntity> 
         super.render(loongBoatEntity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(270));
-        poseStack.translate(0, 0.375F, 0);
+        poseStack.translate(-0.685 * loongBoatEntity.getSize(), 0.375F, 0);
         if (!loongBoatEntity.isUnderWater()) {
             VertexConsumer vc = bufferSource.getBuffer(RenderType.waterMask());
             this.vanillaModel.waterPatch(loongBoatEntity).render(poseStack, vc, packedLight, OverlayTexture.NO_OVERLAY);

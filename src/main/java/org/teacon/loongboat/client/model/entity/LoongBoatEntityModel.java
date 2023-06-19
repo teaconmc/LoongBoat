@@ -42,7 +42,8 @@ public class LoongBoatEntityModel extends GeoModel<LoongBoatEntity> {
     public void setCustomAnimations(LoongBoatEntity loongBoat, long instanceId, AnimationState<LoongBoatEntity> animationState) {
         if (loongBoat.isControllerFirstPerson()) {
             var head = getAnimationProcessor().getBone("dragon_head");
-            head.setPosY(-7.5F);
+            head.setPosY(-5.5F);
+            head.setPosZ(-1F);
             resizeBone(head, 0.8F);
             var horn = getAnimationProcessor().getBone("horn");
             var horn2 = getAnimationProcessor().getBone("horn2");

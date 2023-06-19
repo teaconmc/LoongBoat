@@ -6,11 +6,13 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -68,10 +70,14 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
     @Override
     public Item getDropItem() {return LoongBoat.LOONG_BOAT_ITEM.get();}
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected int getMaxPassengers() {
-        return (this.getSize() + 1) * 2;
+    protected void destroy(DamageSource source) {
+        this.spawnAtLocation(new ItemStack(this.getDropItem(), this.getSize() + 1));
     }
+
+    @Override
+    protected int getMaxPassengers() {return (this.getSize() + 1) * 2;}
 
     /**
      * @see Boat#positionRider(Entity, MoveFunction)
@@ -84,7 +90,7 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
         var idx = this.getPassengers().indexOf(rider); // save time by only making one query
         if (idx == -1) return; // equivalent to if (!this.hasPassenger(eider)) return;
 
-        float xOffset = (this.getSize() - idx) * 0.735F + 0.4F;
+        float xOffset = -idx * 0.625F + 0.1F;
         if (rider instanceof Animal) xOffset += 0.2F;
         var posPlanar = new Vec3(xOffset, 0, 0)
                 .yRot((-this.getYRot() - 90) * ((float) Math.PI / 180))
@@ -167,9 +173,7 @@ public class LoongBoatEntity extends Boat implements GeoEntity {
         return box.inflate(box.getXsize() * multiplier, 0, box.getZsize() * multiplier);
     }
 
-    private String nextControllerName() {
-        return "controller" + (this.controllerCount++);
-    }
+    private String nextControllerName() {return "controller" + (this.controllerCount++);}
 
     private AnimationController<LoongBoatEntity> predicateController(RawAnimation anim, Predicate<AnimationState<LoongBoatEntity>> predicate) {
         return new AnimationController<>(this, this.nextControllerName(), 2,
